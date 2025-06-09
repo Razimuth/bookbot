@@ -1,29 +1,37 @@
-from stats import number_of_words
-from stats import count_characters
-#from stats import sorted_characters
-
-def get_book_text(path_to_file):
-    with open(path_to_file) as f:
-        # do something with f (the file) here
-        # f is a file object
-        file_contents = f.read()
-    return file_contents
+from stats import (get_num_words, get_chars_dict, get_sorted_list)
+import sys
 
 def main():
-    book_path = "/home/raz415/workspace/github.com/Razimuth/bookbot/books/frankenstein.txt"
-      
-    number_words = number_of_words(get_book_text(book_path))
-    print(f"{number_words} words found in the document")
+    home_path = "/home/raz415/workspace/github.com/Razimuth/bookbot/"
+    book_path = get_book_path()
+#    book_path = "books/frankenstein.txt"
+    text = get_book_text(home_path + book_path)
+    num_words = get_num_words(text)
+    chars_dict = get_chars_dict(text)
+    sorted_list = get_sorted_list(chars_dict)
+    print_report(book_path, num_words, sorted_list)
 
-    character_count = count_characters(get_book_text(book_path))
-    print(character_count) # Prints the char and its value
+def get_book_path():
+    if len(sys.argv) < 2:
+        print("Usage: python3 main.py <path_to_book>")
+        sys.exit(1)
+    else:
+        book = sys.argv[1]
+    return book
 
-#    sorted_dictionay = sorted_characters(character_count)
+def get_book_text(path):
+    with open(path) as f:
+        return f.read()
 
-#Import and call the function in main.py, and capture the result.
-#Print the report to the console as shown above. If the character is not an alphabetical character 
-# (using the .isalpha() method), just skip it.
+def print_report(book_path, num_words, sorted_list):
+    print("=========== BOOKBOT =============")
+    print(f"Analyzing book found at {book_path}...")
+    print("---------- Word Count -----------")
+    print(f"Found {num_words} total words")
+    print("-------- Character Count --------")
+    for char in sorted_list:
+        if char["name"].isalpha():
+            print(f"{char["name"]}: {char["num"]}")
+    print("============= END ===============")
 
 main()
-
-
